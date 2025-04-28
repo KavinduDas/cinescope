@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Cinescope",
-  description: "Watch movies",
+  title: "CineScope Movies Database - BO3",
+  description: "Find your favorite movie ratings and recommendations",
 };
 
 export default function RootLayout({ children }) {

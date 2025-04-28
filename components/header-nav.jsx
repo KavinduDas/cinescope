@@ -1,11 +1,12 @@
 import Link from "next/link";
-import logo from "./logo";
+import Logo from "./logo";
+import { ModeToggle } from "./mode-toggle";
 export default function Headernav() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-primary/20 bg-background">
       <div className="container flex h-[70px] items-center">
         <Link href="/" className="flex items-center gap-2">
-          <logo className="h-8 w-15" />
+          <Logo className="h-8 w-15" />
           <span className="text-xl font-bold text-primary">Cinescope</span>
         </Link>
         <nav className="flex items-center gap-4 ml-auto">
@@ -25,6 +26,7 @@ export default function Headernav() {
           >
             About
           </Link>
+          <ModeToggle />
         </nav>
       </div>
     </header>
