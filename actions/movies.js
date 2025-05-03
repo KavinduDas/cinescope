@@ -9,7 +9,11 @@ export const getMovies = async () => {
       cache: "no-store",
     });
 
+    console.log("Response status:", response.status);
+
     if (!response.ok) {
+      const text = await response.text(); // get raw error body
+      console.error("Error body:", text);
       throw new Error("Network response is not okay");
     }
     if (response.status === 200) {
