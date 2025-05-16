@@ -67,7 +67,7 @@ export function LoginForm() {
           onSuccess: () => {
             // redirect to dashobard
             setLoading(false);
-            redirect("/dashboard");
+            redirect("/admin");
           },
           onError: (ctx) => {
             setError({

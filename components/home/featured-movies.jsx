@@ -27,7 +27,7 @@ export default function FeaturedMovies() {
           </div>
         </div>
 
-        <Suspense fallback={<div className="h-96 animate"></div>}>
+        <Suspense fallback="">
           <MoviesList />
         </Suspense>
       </div>
