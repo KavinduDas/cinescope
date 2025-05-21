@@ -15,7 +15,7 @@ export default function AdminLayout({ children }) {
 
             {/*  User DropDown Navigation */}
             <div className="flex items-center justify-center w-12 h-12 bg-red-500 rounded-full">
-              Dummy
+              DM
             </div>
           </div>
         </header>

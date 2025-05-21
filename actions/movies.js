@@ -1,3 +1,6 @@
+"use server";
+import { db } from "@/lib/db";
+
 export const getMovies = async () => {
   try {
     const response = await fetch("http://localhost:3000/api/v1/movie", {
@@ -25,5 +28,24 @@ export const getMovies = async () => {
   } catch (error) {
     console.log("Error Fetching Movies", error);
     return undefined;
+  }
+};
+// Create Movie Form
+
+export const createMovie = async (movie) => {
+  try {
+    const result = await db.collection("moviesNew").insertOne(movie);
+
+    if (result.acknowledged) {
+      console.log(`A Movie Was inserted with the_id : ${result.insertedId}`);
+      return {
+        success: true,
+        message: "Movie Created Successfully",
+      };
+    } else {
+      return undefined;
+    }
+  } catch {
+    console.log("MongoDb insert Failed");
   }
 };
