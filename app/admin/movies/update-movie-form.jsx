@@ -15,11 +15,13 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { createMovie } from "@/actions/movies";
 
-export function AddMovieForm({ onClose }) {
+export function UpdateMovieForm({ onClose, movie }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   //Controlled selected year state
-  const [selectedYear, setSelectedYear] = useState("");
+  const [title, setTitle] = useState(movie?.title || "");
+  const [director, setDirector] = useState(movie?.director || "");
+  const [selectedYear, setSelectedYear] = useState(movie?.year || null);
   const [selectedGenres, setSelectedGenres] = useState("");
 
   // Reset the fields
@@ -32,9 +34,9 @@ export function AddMovieForm({ onClose }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const title = formData.get("title");
-    const year = formData.get("year");
-    const director = formData.get("director");
+    // const title = formData.get("title");
+    // const year = formData.get("year");
+    // const director = formData.get("director");
     const genre = formData.get("genre");
     const rating = formData.get("rating");
     const overview = formData.get("overview");
@@ -58,20 +60,20 @@ export function AddMovieForm({ onClose }) {
 
     setIsSubmitting(true);
 
-    const response = await createMovie({
-      title,
-      year,
-      directors: [director],
-      genre: [genre],
-      rating,
-      imdb: { rating },
-      plot: overview,
-      runtime,
-      backdrop_url,
-      Poste_URL,
-      status: Moviestatus,
-      lastUpdated: new Date().toISOString(),
-    });
+    // const response = await createMovie({
+    //   title,
+    //   year,
+    //   directors: [director],
+    //   genre: [genre],
+    //   rating,
+    //   imdb: { rating },
+    //   plot: overview,
+    //   runtime,
+    //   backdrop_url,
+    //   Poste_URL,
+    //   status: Moviestatus,
+    //   lastUpdated: new Date().toISOString(),
+    // });
 
     setIsSubmitting(false);
     if (response?.success) {
@@ -89,7 +91,14 @@ export function AddMovieForm({ onClose }) {
           <Label htmlFor="title" className="font-bold">
             Title
           </Label>
-          <Input id="title" name="title" placeholder="Movie Title" required />
+          <Input
+            id="title"
+            name="title"
+            placeholder="Movie Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
         </div>
         <div className="space-y-4 ">
           <Label htmlFor="year" className="font-bold">
@@ -137,7 +146,13 @@ export function AddMovieForm({ onClose }) {
           <Label htmlFor="director" className="font-bold">
             Director
           </Label>
-          <Input id="director" name="director" placeholder="Movie director" />
+          <Input
+            id="director"
+            name="director"
+            placeholder="Movie director"
+            value={director}
+            onChange={(e) => setDirector(e.target.value)}
+          />
         </div>
 
         <div className="space-y-4 ">

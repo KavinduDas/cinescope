@@ -17,3 +17,6 @@ export const GET = async () => {
     );
   }
 };
+export const POST = async () => {
+  return NextResponse.json({ message: "Movie updated" }, { status: 200 });
+};

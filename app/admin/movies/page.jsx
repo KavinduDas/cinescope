@@ -1,4 +1,6 @@
 import AddMovieDialog from "./add-movie-dialog";
+import MovieData from "./movie-data";
+import MovieTable from "./movie-table";
 
 export default function MoviesPage() {
   //16px
@@ -12,6 +14,7 @@ export default function MoviesPage() {
 
         <AddMovieDialog />
       </div>
+      <MovieData />
     </div>
   );
 }
