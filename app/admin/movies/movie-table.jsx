@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   Table,
@@ -25,14 +26,44 @@ import {
 
 import { MOVIES } from "@/lib/data";
 import UpdateMovieDialog from "./update-movie-dialog";
+import DeleteMovieDialog from "./delete-movie";
 
 export default function MovieTable({ movies }) {
+  const router = useRouter();
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  console.log("Movies", movies);
 
   const toggleUpdateDialog = (open) => {
     //using requestAnimationFrame to ensure the dialog opens after the state update
     requestAnimationFrame(() => setShowUpdateDialog(open || !showUpdateDialog));
+  };
+
+  const toggleDeleteDialog = (open) => {
+    requestAnimationFrame(() => setShowDeleteDialog(open || !showDeleteDialog));
+  };
+  const handleDeleteMovie = async (movieId) => {
+    const resp = await deleteMovie(movieId);
+    if (resp?.success) {
+      setSelectedMovie(null);
+      toggleDeleteDialog(false);
+      router.refresh();
+    }
+  };
+
+  const getMovieStaus = (status) => {
+    switch (status) {
+      case "published":
+        return "text-green-800 bg-green-100";
+      case "draft":
+        return "text-yellow-800 bg-yellow-100";
+      case "archived":
+        return "text-red-800 bg-red-100";
+      default:
+        return "text-gray-800 bg-red-800";
+    }
   };
 
   return (
@@ -77,10 +108,10 @@ export default function MovieTable({ movies }) {
                   ))}
                 </div>
               </TableCell>
-              <TableCell>{movie.rating}</TableCell>
+              <TableCell>{Number(movie?.imdb?.rating).toFixed(1)}</TableCell>
               <TableCell className="capitalize">
-                <Badge className="text-green-800 bg-green-100">
-                  {movie.status}
+                <Badge className={getMovieStaus(movie.status)}>
+                  {movie.runtime}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">
@@ -105,7 +136,13 @@ export default function MovieTable({ movies }) {
                     </DropdownMenuItem>
 
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-destructive">
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        setSelectedMovie(movie);
+                        toggleDeleteDialog(true);
+                      }}
+                    >
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -118,8 +155,15 @@ export default function MovieTable({ movies }) {
 
       <UpdateMovieDialog
         open={showUpdateDialog}
-        onOpenChange={setShowUpdateDialog}
+        onOpenChange={toggleUpdateDialog}
         movie={selectedMovie}
+      />
+      <DeleteMovieDialog
+        open={showDeleteDialog}
+        onOpenChange={toggleDeleteDialog}
+        movie={selectedMovie}
+        onConfirm={(id) => handleDeleteMovie(id)}
+        isLoading={false}
       />
     </div>
   );

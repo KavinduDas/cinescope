@@ -5,16 +5,34 @@ export default async function MovieData() {
   try {
     const movies = await db.collection("movies").find({}).limit(50).toArray();
     if (movies.length > 0) {
-      const refinedMovies = movies.map((movie, key) => ({
-        id: key + 1,
-        title: movie.title,
-        plot: movie.plot,
-        rated: movie.rated,
-        genres: movie.genres,
-        poster: movie.poster,
-        imdb: movie.imdb,
-        runtime: movie.runtime,
-      }));
+      // const refinedMovies = movies.map((movie, key) => ({
+      //   id: key + 1,
+      //   title: movie.title,
+      //   plot: movie.plot,
+      //   rated: movie.rated,
+      //   genres: movie.genres,
+      //   poster: movie.poster,
+      //   imdb: movie.imdb,
+      //   runtime: movie.runtime,
+      //   status: movie.status,
+      // }));
+      const refinedMovies = movies.map((movie, key) => {
+        console.log("Movie Status", movie.year); // ✅ Now valid
+        return {
+          id: movie._id.toString(),
+          title: movie.title,
+          year: movie.year,
+          plot: movie.plot,
+          rated: movie.rated,
+          genres: movie.genres,
+          poster: movie.poster,
+          imdb: movie.imdb,
+          runtime: movie.runtime,
+          status: movie.status,
+          directors: movie.directors,
+        };
+      });
+
       return <MovieTable movies={refinedMovies} />;
     }
   } catch (error) {

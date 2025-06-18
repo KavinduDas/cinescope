@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
+import { useRouter } from "next/navigation";
 
 import {
   Select,
@@ -13,16 +14,25 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { createMovie } from "@/actions/movies";
+import { updateMovie } from "@/actions/movies";
 
 export function UpdateMovieForm({ onClose, movie }) {
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   //Controlled selected year state
   const [title, setTitle] = useState(movie?.title || "");
-  const [director, setDirector] = useState(movie?.director || "");
+  const [director, setDirector] = useState(movie?.directors.at(0) || "");
   const [selectedYear, setSelectedYear] = useState(movie?.year || null);
-  const [selectedGenres, setSelectedGenres] = useState("");
+  const [selectedGenres, setSelectedGenres] = useState(
+    movie?.genres.at(0) || ""
+  );
+  const [rating, setRating] = useState(movie?.imdb?.rating || "");
+  const [runtime, setRuntime] = useState(movie?.runtime || "");
+  const [overview, setOverview] = useState(movie?.plot || "");
+  const [poster, setPoster] = useState(movie?.poster || "");
+  const [backdrop, setBackdrop] = useState(movie?.backdrop || "");
+  const [status, setStatus] = useState(movie?.status || "");
 
   // Reset the fields
   const handleClose = () => {
@@ -37,19 +47,19 @@ export function UpdateMovieForm({ onClose, movie }) {
     // const title = formData.get("title");
     // const year = formData.get("year");
     // const director = formData.get("director");
-    const genre = formData.get("genre");
-    const rating = formData.get("rating");
-    const overview = formData.get("overview");
-    const runtime = formData.get("runtime");
+    // const genre = formData.get("genre");
+    // const rating = formData.get("rating");
+    // const overview = formData.get("overview");
+    // const runtime = formData.get("runtime");
     const backdrop_url = formData.get("backdrop_url");
     const Poste_URL = formData.get("Poste_URL");
     const Moviestatus = formData.get("status");
 
     console.log({
       title,
-      year,
+      year: selectedYear,
       director,
-      genre,
+      genres: [selectedGenres],
       rating,
       overview,
       runtime,
@@ -60,25 +70,25 @@ export function UpdateMovieForm({ onClose, movie }) {
 
     setIsSubmitting(true);
 
-    // const response = await createMovie({
-    //   title,
-    //   year,
-    //   directors: [director],
-    //   genre: [genre],
-    //   rating,
-    //   imdb: { rating },
-    //   plot: overview,
-    //   runtime,
-    //   backdrop_url,
-    //   Poste_URL,
-    //   status: Moviestatus,
-    //   lastUpdated: new Date().toISOString(),
-    // });
+    const response = await updateMovie(movie?.id, {
+      title,
+      year: selectedYear,
+      directors: [director],
+      genres: [selectedGenres],
+      imdb: { rating: Number(rating) },
+      runtime,
+      plot: overview,
+      poster,
+      backdrop,
+      status,
+      lastupdated: new Date().toISOString(),
+    });
 
     setIsSubmitting(false);
     if (response?.success) {
       console.log(response);
       handleClose();
+      router.refresh();
     }
 
     // setTimeout(() => setIsSubmitting(false), 3000);
@@ -167,6 +177,8 @@ export function UpdateMovieForm({ onClose, movie }) {
             max="10"
             step="0.1"
             placeholder="Rating"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
           />
         </div>
 
@@ -182,6 +194,8 @@ export function UpdateMovieForm({ onClose, movie }) {
             max="400"
             step="0.1"
             placeholder="Runtime"
+            value={runtime}
+            onChange={(e) => setRuntime(e.target.value)}
           />
         </div>
       </div>
@@ -195,6 +209,8 @@ export function UpdateMovieForm({ onClose, movie }) {
           name="overview"
           placeholder="Movie Description"
           className="max-h-[100px]"
+          value={overview}
+          onChange={(e) => setOverview(e.target.value)}
         />
       </div>
       <div className="grid grid-cols-2 gap-4">
@@ -207,6 +223,8 @@ export function UpdateMovieForm({ onClose, movie }) {
             name="backdrop_url"
             placeholder="backdrop_url"
             required
+            value={backdrop}
+            onChange={(e) => setBackdrop(e.target.value)}
           />
         </div>
 
@@ -214,14 +232,25 @@ export function UpdateMovieForm({ onClose, movie }) {
           <Label htmlFor="Poste_URL" className="font-bold">
             Poste URL
           </Label>
-          <Input id="Poste_URL" name="Poste_URL" placeholder="Poste_URL" />
+          <Input
+            id="Poste_URL"
+            name="Poste_URL"
+            placeholder="Poste_URL"
+            value={poster}
+            onChange={(e) => setPoster(e.target.value)}
+          />
         </div>
 
         <div className="space-y-4 ">
           <Label htmlFor="status" className="font-bold">
             Status
           </Label>
-          <Select id="status" name="status">
+          <Select
+            id="status"
+            name="status"
+            onValueChange={setStatus}
+            value={status}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select Staus" />
             </SelectTrigger>
@@ -243,7 +272,7 @@ export function UpdateMovieForm({ onClose, movie }) {
           Cancel
         </Button>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Adding" : "Add Movie"}
+          {isSubmitting ? "Updating" : "Save changes"}
         </Button>
       </DialogFooter>
     </form>
