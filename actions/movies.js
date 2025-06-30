@@ -2,6 +2,7 @@
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
 
+// get all movies action
 export const getMovies = async () => {
   try {
     const response = await fetch("http://localhost:3000/api/v1/movie", {
@@ -86,15 +87,38 @@ export const deleteMovie = async (movieId, movieDoc) => {
       .deleteOne({ _id: new ObjectId.createFromHexString(movieId) });
 
     if (result.acknowledged) {
-      console.log(`A Movie Was inserted with the_id : ${result.insertedId}`);
+      console.log(`A Movie Was deleted with the_id : ${result.insertedId}`);
       return {
         success: true,
-        message: "Movie Updated Successfully",
+        message: "Movie deleted Successfully",
       };
     } else {
       return undefined;
     }
   } catch {
-    console.log("MongoDb Updated Failed");
+    console.log("MongoDb deleted Failed");
+  }
+};
+// get movie by iD
+export const getMovieById = async (movieId) => {
+  try {
+    const result = await db
+      .collection("movies")
+      .findOne({ _id: new ObjectId(movieId) });
+
+    console.log(result);
+
+    if (result && Object.keys(result).length > 0) {
+      console.log(`A Movie found with the_id : ${result._id}`);
+      return {
+        success: true,
+        message: "Movie Found",
+        data: result,
+      };
+    } else {
+      return undefined;
+    }
+  } catch (error) {
+    console.log("MongoDb  Failed", error);
   }
 };

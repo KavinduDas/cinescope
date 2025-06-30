@@ -22,7 +22,7 @@ export default async function MoviesList() {
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {/* Loop through Movies */}
       {movies.map((movie, index) => (
-        <div key={`${movie.id}-${index}`} className="">
+        <div key={`${movie._id}-${index}`} className="">
           <MovieCard movie={movie} />
         </div>
       ))}

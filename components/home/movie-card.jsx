@@ -7,13 +7,13 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-
+// Smart component / Client compenet
 export default function MovieCard({ movie }) {
   const [posterUrl, setPosterUrl] = useState(movie.poster);
   //   return <MovieCardSkeleton />;
 
   return (
-    <Link href={`/movies/${movie.id}`}>
+    <Link href={`/movies/${movie._id}`}>
       <Card className="py-0 overflow-hidden transition-colors border-primary/20 hover:border-primary/50">
         <div className="w-full overflow-hidden aspect-2/3">
           <Image

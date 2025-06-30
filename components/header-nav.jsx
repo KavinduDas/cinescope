@@ -28,6 +28,13 @@ export default function Headernav() {
           </Link>
 
           <Link
+            href="/admin"
+            className="text-sm font-medium transition-colors hover:text-primary"
+          >
+            Admin
+          </Link>
+
+          <Link
             href="/login"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
