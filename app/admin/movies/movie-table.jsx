@@ -111,7 +111,7 @@ export default function MovieTable({ movies }) {
               <TableCell>{Number(movie?.imdb?.rating).toFixed(1)}</TableCell>
               <TableCell className="capitalize">
                 <Badge className={getMovieStaus(movie.status)}>
-                  {movie.runtime}
+                  {/* {movie.runtime} */}
                 </Badge>
               </TableCell>
               <TableCell className="text-right">

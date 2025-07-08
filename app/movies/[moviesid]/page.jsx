@@ -1,6 +1,18 @@
 import { getMovieById } from "@/actions/movies";
 import MovieLoading from "./movie-loading";
 
+export async function generateMetadata(props) {
+  const { moviesid } = await props.params;
+  const movie = await getMovieById(moviesid);
+
+  return {
+    title: movie?.data?.title
+      ? `Cinescope | ${movie.data.title}`
+      : "Cinescope | Movie Details",
+    description: movie?.data?.plot ?? "Find Your movie ratings",
+  };
+}
+//server Component
 export default async function MovieDetailsPage(props) {
   const { moviesid } = await props.params;
   const movie = await getMovieById(moviesid);

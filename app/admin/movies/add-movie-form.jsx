@@ -15,6 +15,7 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { createMovie } from "@/actions/movies";
 
+//smart component
 export function AddMovieForm({ onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 

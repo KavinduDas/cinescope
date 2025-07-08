@@ -1,8 +1,12 @@
 import AddMovieDialog from "./add-movie-dialog";
 import MovieData from "./movie-data";
+import MovieSelectors from "./movie-selectors";
 import MovieTable from "./movie-table";
 
-export default function MoviesPage() {
+export default async function MoviesPage(props) {
+  const searchparams = await props.searchParams;
+  const query = searchparams?.query || "";
+
   //16px
   return (
     <div className="space-y-4">
@@ -14,7 +18,8 @@ export default function MoviesPage() {
 
         <AddMovieDialog />
       </div>
-      <MovieData />
+      <MovieSelectors />
+      <MovieData query={query} />
     </div>
   );
 }

@@ -1,6 +1,10 @@
 import React from "react";
 
-export default function HeroBanner() {
+// Dumb Component
+export default function HeroBanner({
+  title = "Cinescope Movie Database",
+  description = "Sample Description",
+}) {
   return (
     <section className="relative overflow-hidden min-h-[70vh] bg-red-500">
       <div className="absolute inset-0 z-0">
@@ -10,9 +14,9 @@ export default function HeroBanner() {
 
       <div className="container relative px-4 py-10">
         <h1 className="py-20 text-3xl font-bold text-center text-white">
-          Hero Title Here
+          {title}
         </h1>
-        <p className="text-center text-white">Movie description</p>
+        <p className="text-center text-white">{description}</p>
       </div>
     </section>
   );

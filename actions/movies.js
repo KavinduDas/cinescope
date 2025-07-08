@@ -122,3 +122,39 @@ export const getMovieById = async (movieId) => {
     console.log("MongoDb  Failed", error);
   }
 };
+
+//get All movies with filters action
+export const searchMovies = async (query) => {
+  try {
+    const movies = await db
+      .collection("movies")
+      .find({ title: { $regex: query, $options: "i" } }) // i for case insensitivity
+      .limit(50)
+      .toArray();
+    // console.log("Search movies : ", movies, query);
+    if (movies && movies.length > 0) {
+      return {
+        success: true,
+        message: "Movies fetched Succesfully",
+        data: movies,
+      };
+    } else {
+      return {
+        success: false,
+        message: "No Movies F",
+      };
+    }
+    return {
+      success: true,
+      message: "Movies fetched succcesfully ",
+      data: movies,
+    };
+  } catch (error) {
+    console.log("MongoDB fetch Failed", error);
+    return {
+      success: false,
+      message: "Error Fetching movies ",
+      data: [],
+    };
+  }
+};

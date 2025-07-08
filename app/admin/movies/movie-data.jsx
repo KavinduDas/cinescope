@@ -1,34 +1,26 @@
-import { db } from "@/lib/db";
 import MovieTable from "./movie-table";
+import { searchMovies } from "@/actions/movies";
 
-export default async function MovieData() {
+export default async function MovieData({ query = "" }) {
   try {
-    const movies = await db.collection("movies").find({}).limit(50).toArray();
-    if (movies.length > 0) {
-      // const refinedMovies = movies.map((movie, key) => ({
-      //   id: key + 1,
-      //   title: movie.title,
-      //   plot: movie.plot,
-      //   rated: movie.rated,
-      //   genres: movie.genres,
-      //   poster: movie.poster,
-      //   imdb: movie.imdb,
-      //   runtime: movie.runtime,
-      //   status: movie.status,
-      // }));
-      const refinedMovies = movies.map((movie, key) => {
-        console.log("Movie Status", movie.year); // ✅ Now valid
+    // const movies = await db.collection("movies").find({}).limit(50).toArray();
+
+    const movies = await searchMovies(query);
+
+    if (movies && movies.data.length > 0) {
+      const refinedMovies = movies.data.map((movie, key) => {
+        // ✅ Now valid
         return {
           id: movie._id.toString(),
           title: movie.title,
           year: movie.year,
           plot: movie.plot,
           rated: movie.rated,
-          genres: movie.genres,
+          genres: Array.isArray(movie.genres) ? movie.genres : [], // use Chatgpt for this error
           poster: movie.poster,
           imdb: movie.imdb,
           runtime: movie.runtime,
-          status: movie.status,
+          status: movie.status ?? "published",
           directors: movie.directors,
         };
       });
