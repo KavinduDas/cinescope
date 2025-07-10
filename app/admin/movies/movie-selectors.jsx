@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useDebounce } from "use-debounce";
 
 export default function MovieSelectors() {
   const searchparams = useSearchParams();
@@ -22,8 +23,9 @@ export default function MovieSelectors() {
   const [statusFilter, setstatusFilter] = useState("all");
   const [immediateSearchterm, setImmediateSearchterm] = useState(searchTerm);
 
-  const deferredsearchTerm = useDeferredValue(immediateSearchterm);
+  // const deferredsearchTerm = useDeferredValue(immediateSearchterm);
   const isFirstRender = useRef(true);
+  const [debounceSearchTerm] = useDebounce(immediateSearchterm, 1000);
 
   const handleMovieSearch = (term) => setImmediateSearchterm(term);
   useEffect(() => {
@@ -31,13 +33,15 @@ export default function MovieSelectors() {
       isFirstRender.current = false;
       return;
     }
-    const params = new URLSearchParams(searchparams);
+    const params = new URLSearchParams(searchparams.toString());
 
-    deferredsearchTerm
-      ? params.set("query", deferredsearchTerm)
+    debounceSearchTerm
+      ? params.set("query", debounceSearchTerm)
       : params.delete("query");
-    replace(`${pathname}?${params.toString()}`);
-  }, [deferredsearchTerm]);
+    if (searchTerm !== debounceSearchTerm) {
+      replace(`${pathname}?${params.toString()}`);
+    }
+  }, [debounceSearchTerm, pathname, replace]);
 
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

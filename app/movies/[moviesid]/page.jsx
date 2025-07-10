@@ -1,5 +1,6 @@
 import { getMovieById } from "@/actions/movies";
 import MovieLoading from "./movie-loading";
+// import { resolve } from "styled-jsx/css";
 
 export async function generateMetadata(props) {
   const { moviesid } = await props.params;
@@ -16,8 +17,13 @@ export async function generateMetadata(props) {
 export default async function MovieDetailsPage(props) {
   const { moviesid } = await props.params;
   const movie = await getMovieById(moviesid);
+  // Delay for demonstation od laoding
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // console.log("Movie", movie);
 
-  console.log("Movie", movie);
+  if (!movie || !movie.data) {
+    throw new Error("Movie Not Found");
+  }
 
   return (
     <main className="flex flex-col justify-center px-4 py-16 mx-auto">
